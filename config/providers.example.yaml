@@ -1,0 +1,20 @@
+# Example only. Store secrets in environment variables or a secret manager.
+llm:
+  provider: openai-compatible
+  base_url_env: RC_LLM_BASE_URL
+  api_key_env: RC_LLM_API_KEY
+  model_env: RC_LLM_MODEL
+  timeout_seconds: 30
+  max_retries: 3
+
+embeddings:
+  enabled: true
+  provider: local
+  model_env: RC_EMBEDDING_MODEL
+  dimensions_env: RC_EMBEDDING_DIMENSIONS
+  cache_directory: /var/lib/repochronicle/models
+  lazy_load: true
+  per_space_indexing: true
+
+# Local model servers can expose an OpenAI-compatible API. Model artifacts and
+# their licenses are selected by the operator and are not included in this file.

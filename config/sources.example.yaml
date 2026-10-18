@@ -1,0 +1,24 @@
+# Source registry policy example. Do not store tokens in this file.
+git:
+  allowed_hosts:
+    - github.com
+    - gitlab.com
+  allow_self_managed_hosts: []
+  read_only_required: true
+  bootstrap:
+    pin_target_sha: true
+    max_file_bytes: 2000000
+    max_repository_bytes: 2000000000
+    include_history_days: 365
+    follow_submodules: false
+    scan_lfs_by_default: false
+    reject_embedded_credentials: true
+    reject_untrusted_redirect_hosts: true
+
+chat:
+  require_admin_opt_in: true
+  default_mode: mention_only
+  telegram_business_optional: true
+  discord_message_content_intent_required_for_full_content: true
+  allow_all_destinations: false
+  proactive_by_default: false
