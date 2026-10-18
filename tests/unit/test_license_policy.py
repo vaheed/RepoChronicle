@@ -7,9 +7,10 @@ def test_license_policy_accepts_common_spdx_psf_identifier() -> None:
 
 
 def test_license_policy_corrects_only_reviewed_missing_metadata_version() -> None:
-    assert license_failures(
-        [{"Name": "py_rust_stemmers", "Version": "0.1.8", "License": "UNKNOWN"}]
-    ) == []
+    assert (
+        license_failures([{"Name": "py_rust_stemmers", "Version": "0.1.8", "License": "UNKNOWN"}])
+        == []
+    )
     failures = license_failures(
         [{"Name": "py_rust_stemmers", "Version": "0.1.9", "License": "UNKNOWN"}]
     )
