@@ -45,7 +45,7 @@ The starter deliberately distinguishes executable foundation code from implement
 Requirements: Docker Engine with the Compose plugin, Git, and Python 3.12+ for local tests.
 
 ```bash
-git clone https://github.com/<your-account>/repochronicle.git
+git clone https://github.com/vaheed/RepoChronicle.git
 cd repochronicle
 cp .env.example .env
 docker compose up --build -d
