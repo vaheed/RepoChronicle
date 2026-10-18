@@ -68,11 +68,11 @@ async def test_remote_embedding_provider_rejects_duplicate_or_missing_indexes(ro
 async def test_remote_embedding_provider_rejects_non_finite_values() -> None:
     client = httpx.AsyncClient(
         transport=httpx.MockTransport(
-                lambda _: httpx.Response(
-                    200,
-                    content=b'{"data":[{"index":0,"embedding":[Infinity]}]}',
-                    headers={"content-type": "application/json"},
-                )
+            lambda _: httpx.Response(
+                200,
+                content=b'{"data":[{"index":0,"embedding":[Infinity]}]}',
+                headers={"content-type": "application/json"},
+            )
         )
     )
     provider = OpenAICompatibleEmbeddingProvider(
