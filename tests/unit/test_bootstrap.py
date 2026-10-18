@@ -1,11 +1,11 @@
 import pytest
+
 from repochronicle.domain.bootstrap import (
     BootstrapRun,
     BootstrapState,
     InvalidBootstrapTransition,
     should_enqueue_delta,
 )
-
 
 VALID_SHA = "0123456789abcdef0123456789abcdef01234567"
 OTHER_SHA = "abcdef0123456789abcdef0123456789abcdef01"
