@@ -1,4 +1,4 @@
-from scripts.check_licenses import license_failures
+from repochronicle.license_policy import license_failures
 
 
 def test_license_policy_accepts_common_spdx_psf_identifier() -> None:
