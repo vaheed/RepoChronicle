@@ -17,9 +17,11 @@ class Settings(BaseSettings):
     env: str = "development"
     log_level: str = "INFO"
     public_api_url: str = "http://localhost:8080"
-    api_host: str = "0.0.0.0"
+    api_host: str = "127.0.0.1"
     api_port: int = 8080
-    mcp_host: str = "0.0.0.0"
+    # MCP runs in Compose and must listen on the container interface; Compose
+    # limits published host ports to loopback by default (RC_MCP_BIND_HOST).
+    mcp_host: str = "0.0.0.0"  # nosec B104
     mcp_port: int = 8090
 
     database_url: str = (
