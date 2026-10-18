@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+from contextlib import suppress
 
 from repochronicle.config import get_settings
 
@@ -32,7 +33,5 @@ async def run() -> None:
 
 
 if __name__ == "__main__":
-    try:
+    with suppress(KeyboardInterrupt):
         asyncio.run(run())
-    except KeyboardInterrupt:
-        pass

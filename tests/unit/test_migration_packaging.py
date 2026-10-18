@@ -1,5 +1,5 @@
-from pathlib import Path
 import tomllib
+from pathlib import Path
 
 
 def test_canonical_migration_is_included_in_the_installed_package() -> None:

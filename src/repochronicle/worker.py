@@ -7,6 +7,7 @@ acknowledging feature jobs that have not been implemented.
 
 import asyncio
 import logging
+from contextlib import suppress
 
 import asyncpg
 from redis.asyncio import Redis
@@ -45,7 +46,5 @@ async def run() -> None:
 
 
 if __name__ == "__main__":
-    try:
+    with suppress(KeyboardInterrupt):
         asyncio.run(run())
-    except KeyboardInterrupt:
-        pass

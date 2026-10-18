@@ -1,7 +1,7 @@
 """Evidence selection with a strict, deterministic character budget."""
 
-from dataclasses import dataclass
 from collections.abc import Sequence
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)

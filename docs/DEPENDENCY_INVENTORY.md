@@ -17,6 +17,7 @@ This inventory describes the intended baseline. Exact resolved versions and tran
 | aiogram | Telegram Bot API | MIT | Optional `channels` extra |
 | discord.py | Discord API | MIT | Optional `channels` extra |
 | FastEmbed | Local embedding generation | Apache-2.0 | Optional `local-embeddings` extra |
+| py-rust-stemmers 0.1.8 (transitive) | FastEmbed text preprocessing | MIT ([upstream license](https://github.com/qdrant/py-rust-stemmers/blob/main/LICENSE)); wheel metadata omits the license, so CI applies a version-specific metadata correction | Transitive only |
 
 ## Infrastructure images
 
