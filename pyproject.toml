@@ -60,7 +60,7 @@ training = [
   "peft>=0.15,<1",
 ]
 dev = [
-  "pytest>=8.3,<9",
+  "pytest>=9.0.3,<10",
   "pytest-asyncio>=0.25,<2",
   "ruff>=0.11,<1",
   "mypy>=1.15,<2",
@@ -92,8 +92,6 @@ src = ["src", "tests"]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 ignore = ["E501"]
 
-[tool.ruff.lint.isort]
-known-first-party = ["repochronicle"]
 
 [tool.mypy]
 python_version = "3.12"

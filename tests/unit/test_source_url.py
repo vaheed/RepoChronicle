@@ -1,5 +1,4 @@
 import pytest
-
 from repochronicle.domain.source_url import InvalidSourceURL, validate_repository_url
 
 

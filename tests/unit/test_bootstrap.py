@@ -1,5 +1,4 @@
 import pytest
-
 from repochronicle.domain.bootstrap import (
     BootstrapRun,
     BootstrapState,
