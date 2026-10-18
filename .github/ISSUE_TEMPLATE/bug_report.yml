@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a reproducible defect without sharing secrets or private source data.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include access tokens, private repository content, or chat exports.
+  - type: input
+    id: phase
+    attributes:
+      label: Roadmap phase
+      description: Which phase and commit/version?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction using synthetic data
+    validations:
+      required: true

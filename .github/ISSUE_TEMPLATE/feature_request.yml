@@ -1,0 +1,27 @@
+name: Feature request
+description: Propose a capability or roadmap improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: input
+    id: phase
+    attributes:
+      label: Proposed roadmap phase
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria and tests
+    validations:
+      required: true

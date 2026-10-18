@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-and-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17-bookworm
+        env:
+          POSTGRES_DB: repochronicle_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d repochronicle_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+      valkey:
+        image: valkey/valkey:8-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "valkey-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+
+    env:
+      RC_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/repochronicle_test
+      RC_VALKEY_URL: redis://localhost:6379/0
+      RC_ENV: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install project and all runtime connector/embedding extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,channels,local-embeddings]"
+      - name: Repository language and link hygiene
+        run: python scripts/check_english_only.py
+      - name: Lint
+        run: ruff check .
+      - name: Formatting
+        run: ruff format --check .
+      - name: Type check
+        run: mypy src
+      - name: Apply migrations
+        run: python -m repochronicle.migrations.cli upgrade
+      - name: Tests
+        run: pytest -q
+      - name: Security lint
+        run: bandit -q -r src
+      - name: Audit dependencies
+        run: pip-audit

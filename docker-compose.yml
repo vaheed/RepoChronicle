@@ -1,0 +1,143 @@
+name: repochronicle
+
+services:
+  db:
+    image: pgvector/pgvector:pg17-bookworm
+    environment:
+      POSTGRES_DB: repochronicle
+      POSTGRES_USER: repochronicle
+      POSTGRES_PASSWORD: ${RC_DB_PASSWORD:-change-me-local-only}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U repochronicle -d repochronicle"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    networks: [backend]
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    command: ["valkey-server", "--appendonly", "yes"]
+    volumes:
+      - valkey_data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    networks: [backend]
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "repochronicle.migrations.cli", "upgrade"]
+    environment:
+      RC_DATABASE_URL: postgresql://repochronicle:${RC_DB_PASSWORD:-change-me-local-only}@db:5432/repochronicle
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+    networks: [backend]
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["uvicorn", "repochronicle.api:app", "--host", "0.0.0.0", "--port", "8080"]
+    env_file: .env
+    environment:
+      RC_DATABASE_URL: postgresql://repochronicle:${RC_DB_PASSWORD:-change-me-local-only}@db:5432/repochronicle
+      RC_VALKEY_URL: redis://valkey:6379/0
+    ports:
+      - "${RC_API_BIND_HOST:-127.0.0.1}:8080:8080"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health/live', timeout=2).read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+    networks: [backend]
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "repochronicle.worker"]
+    env_file: .env
+    environment:
+      RC_DATABASE_URL: postgresql://repochronicle:${RC_DB_PASSWORD:-change-me-local-only}@db:5432/repochronicle
+      RC_VALKEY_URL: redis://valkey:6379/0
+    volumes:
+      - model_cache:/var/lib/repochronicle/models
+      - repository_workspaces:/var/lib/repochronicle/workspaces
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      valkey:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [backend]
+
+  mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "repochronicle.mcp_server"]
+    env_file: .env
+    environment:
+      RC_DATABASE_URL: postgresql://repochronicle:${RC_DB_PASSWORD:-change-me-local-only}@db:5432/repochronicle
+      RC_VALKEY_URL: redis://valkey:6379/0
+    ports:
+      - "${RC_MCP_BIND_HOST:-127.0.0.1}:8090:8090"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    networks: [backend]
+
+  connectors:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "repochronicle.connectors.runner"]
+    env_file: .env
+    environment:
+      RC_DATABASE_URL: postgresql://repochronicle:${RC_DB_PASSWORD:-change-me-local-only}@db:5432/repochronicle
+      RC_VALKEY_URL: redis://valkey:6379/0
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      valkey:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [backend]
+
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["local-llm"]
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "${RC_OLLAMA_BIND_HOST:-127.0.0.1}:11434:11434"
+    restart: unless-stopped
+    networks: [backend]
+
+volumes:
+  postgres_data:
+  valkey_data:
+  model_cache:
+  repository_workspaces:
+  ollama_data:
+
+networks:
+  backend:
+    driver: bridge
