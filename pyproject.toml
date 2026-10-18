@@ -101,6 +101,10 @@ strict = true
 warn_unreachable = true
 show_error_codes = true
 
+[[tool.mypy.overrides]]
+module = ["asyncpg"]
+ignore_missing_imports = true
+
 [tool.coverage.run]
 branch = true
 source = ["repochronicle"]
