@@ -60,7 +60,15 @@ class OpenAICompatibleEmbeddingProvider:
                 headers=headers,
             )
             response.raise_for_status()
-            body = response.json()
+            # Decode JavaScript's non-finite numeric tokens so the validation
+            # below can reject them with the same error as other invalid values.
+            body = response.json(
+                parse_constant=lambda value: {
+                    "NaN": math.nan,
+                    "Infinity": math.inf,
+                    "-Infinity": -math.inf,
+                }[value]
+            )
         except httpx.TimeoutException as exc:
             raise RuntimeError("embedding_timeout") from exc
         except httpx.HTTPStatusError as exc:
