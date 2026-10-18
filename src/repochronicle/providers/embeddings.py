@@ -150,6 +150,5 @@ class LocalFastEmbedProvider:
         if self._engine is None:
             raise RuntimeError("embedding_engine_not_initialized")
         return tuple(
-            tuple(float(value) for value in vector)
-            for vector in self._engine.embed(texts)
+            tuple(float(value) for value in vector) for vector in self._engine.embed(texts)
         )

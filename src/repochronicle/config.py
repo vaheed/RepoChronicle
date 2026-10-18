@@ -23,8 +23,7 @@ class Settings(BaseSettings):
     mcp_port: int = 8090
 
     database_url: str = (
-        "postgresql://repochronicle:change-me-local-only@localhost:5432/"
-        "repochronicle"
+        "postgresql://repochronicle:change-me-local-only@localhost:5432/repochronicle"
     )
     valkey_url: str = "redis://localhost:6379/0"
     database_connect_timeout_seconds: float = Field(default=5.0, gt=0, le=60)

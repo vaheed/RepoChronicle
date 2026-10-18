@@ -75,9 +75,7 @@ def license_failures(packages: list[dict[str, Any]]) -> list[str]:
         version = str(package.get("Version", "unknown"))
         license_name = str(package.get("License", "")).strip()
         normalized_name = name.lower().replace("_", "-").replace(".", "-")
-        license_name = LICENSE_METADATA_OVERRIDES.get(
-            (normalized_name, version), license_name
-        )
+        license_name = LICENSE_METADATA_OVERRIDES.get((normalized_name, version), license_name)
         normalized = license_name.lower()
         if not normalized or any(marker in normalized for marker in FORBIDDEN_MARKERS):
             failures.append(f"{name}=={version}: disallowed/unknown license {license_name!r}")

@@ -44,9 +44,7 @@ def normalize_discord_message(
             else None
         ),
         thread_id=(
-            str(thread_id)
-            if thread_id
-            else (str(guild_id) if message.get("type") == 11 else None)
+            str(thread_id) if thread_id else (str(guild_id) if message.get("type") == 11 else None)
         ),
         edited_at=_parse_timestamp(message.get("edited_timestamp")),
         source_url=None,

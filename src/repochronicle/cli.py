@@ -38,8 +38,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "llm_configured": bool(settings.llm_base_url and settings.llm_model),
             "embedding_provider": settings.embedding_provider,
             "warning": (
-                "doctor does not test network connectivity; "
-                "use /health/ready after Compose startup"
+                "doctor does not test network connectivity; use /health/ready after Compose startup"
             ),
         }
         print(json.dumps(result, indent=2))

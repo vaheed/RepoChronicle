@@ -2,9 +2,7 @@ from scripts.check_licenses import license_failures
 
 
 def test_license_policy_accepts_common_spdx_psf_identifier() -> None:
-    packages = [
-        {"Name": "typing_extensions", "Version": "4.16.0", "License": "PSF-2.0"}
-    ]
+    packages = [{"Name": "typing_extensions", "Version": "4.16.0", "License": "PSF-2.0"}]
     assert license_failures(packages) == []
 
 

@@ -6,10 +6,13 @@ ALLOWED = {"github.com", "gitlab.com", "gitlab.internal.example"}
 
 
 def test_normalizes_allowed_repository_url() -> None:
-    assert validate_repository_url(
-        "https://GitHub.com/Example/Project.git/",
-        ALLOWED,
-    ) == "https://github.com/Example/Project.git"
+    assert (
+        validate_repository_url(
+            "https://GitHub.com/Example/Project.git/",
+            ALLOWED,
+        )
+        == "https://github.com/Example/Project.git"
+    )
 
 
 @pytest.mark.parametrize(
@@ -39,15 +42,21 @@ def test_allows_explicitly_configured_self_managed_gitlab() -> None:
 
 
 def test_preserves_explicit_port_for_self_managed_git_host() -> None:
-    assert validate_repository_url(
-        "https://gitlab.internal.example:8443/platform/api",
-        ALLOWED,
-    ) == "https://gitlab.internal.example:8443/platform/api"
+    assert (
+        validate_repository_url(
+            "https://gitlab.internal.example:8443/platform/api",
+            ALLOWED,
+        )
+        == "https://gitlab.internal.example:8443/platform/api"
+    )
 
 
 def test_http_requires_explicit_opt_in_for_private_installations() -> None:
-    assert validate_repository_url(
-        "http://gitlab.internal.example/platform/api",
-        ALLOWED,
-        allow_insecure_http=True,
-    ) == "http://gitlab.internal.example/platform/api"
+    assert (
+        validate_repository_url(
+            "http://gitlab.internal.example/platform/api",
+            ALLOWED,
+            allow_insecure_http=True,
+        )
+        == "http://gitlab.internal.example/platform/api"
+    )
