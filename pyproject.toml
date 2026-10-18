@@ -56,7 +56,7 @@ local-embeddings = [
 ]
 training = [
   "transformers>=4.50,<6",
-  "trl>=0.17,<1",
+  "trl>=0.17,<2",
   "peft>=0.15,<1",
 ]
 dev = [
